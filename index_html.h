@@ -152,8 +152,28 @@ char webpage[] PROGMEM = R"=====(
     <h2>&#x1F3CE&#x1F3CE&#x1F3CE;</h2>
     <div>
       <table id="mainTable" style="width:375px; margin:auto;table-layout:fixed" CELLSPACING=9>
-        // ... (unchanged table structure)
-      </table>  
+    <tr>
+      <td ontouchstart='onTouchStartAndEnd("5")' ontouchcancel='onTouchStartAndEnd("0")' ontouchend='onTouchStartAndEnd("0")'><span class="arrows" >&#11017;</span></td>
+      <td ontouchstart='onTouchStartAndEnd("1")' ontouchcancel='onTouchStartAndEnd("0")' ontouchend='onTouchStartAndEnd("0")'><span class="arrows" >&#8679;</span></td>
+      <td ontouchstart='onTouchStartAndEnd("6")' ontouchcancel='onTouchStartAndEnd("0")' ontouchend='onTouchStartAndEnd("0")'><span class="arrows" >&#11016;</span></td>
+    </tr>
+    <tr>
+      <td ontouchstart='onTouchStartAndEnd("3")' ontouchcancel='onTouchStartAndEnd("0")' ontouchend='onTouchStartAndEnd("0")'><span class="arrows" >&#8678;</span></td>
+      <td style="background-color:gray;box-shadow:none"></td>
+      <td ontouchstart='onTouchStartAndEnd("4")' ontouchcancel='onTouchStartAndEnd("0")' ontouchend='onTouchStartAndEnd("0")'><span class="arrows" >&#8680;</span></td>
+    </tr>
+      
+    <tr>
+      <td ontouchstart='onTouchStartAndEnd("7")' ontouchcancel='onTouchStartAndEnd("0")' ontouchend='onTouchStartAndEnd("0")'><span class="arrows" >&#11019;</span></td>
+      <td ontouchstart='onTouchStartAndEnd("2")' ontouchcancel='onTouchStartAndEnd("0")' ontouchend='onTouchStartAndEnd("0")'><span class="arrows" >&#8681;</span></td>
+      <td ontouchstart='onTouchStartAndEnd("8")' ontouchcancel='onTouchStartAndEnd("0")' ontouchend='onTouchStartAndEnd("0")'><span class="arrows" >&#11018;</span></td>
+    </tr>    
+    <tr>
+      <td ontouchstart='onTouchStartAndEnd("9")' ontouchcancel='onTouchStartAndEnd("0")' ontouchend='onTouchStartAndEnd("0")'><span class="circularArrows" >&#8634;</span></td>
+      <td style="background-color:gray;box-shadow:none"></td>
+      <td ontouchstart='onTouchStartAndEnd("10")' ontouchcancel='onTouchStartAndEnd("0")' ontouchend='onTouchStartAndEnd("0")'><span class="circularArrows" >&#8635;</span></td>
+    </tr>    
+  </table> 
     </div>  
   </body onload="javascript:init()">
 </html>
