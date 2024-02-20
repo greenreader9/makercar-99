@@ -54,70 +54,39 @@ char webpage[] PROGMEM = R"=====(
       var Socket;
       var randomMode;
       var startTimestamp;
+      var oppMode;
 
       function init() {
         Socket = new WebSocket('ws://' + window.location.hostname + ':81/');
         randomMode = Math.random();
         startTimestamp = Date.now();
 
-        // Additional options
-        if (randomMode < 0.25) {
-          // Change direction of arrow keys
-          modifyArrowDirection();
-        } else if (randomMode < 0.5) {
-          // Rotate background color after 3 seconds
-          setTimeout(rotateBackgroundColor, 3000);
-        } else if (randomMode < 0.75) {
-          // Send POST webhook at script start
-          sendPostWebhook();
+        if(randomMode < 0.2){
+            oppMode = 1; // Normal run
+        } else if(randomMode < 0.4){
+            oppMode = 2; // Change BG every x sec
+        } else if(randomMode < 0.6){
+            oppMode = 3; // Change motor direction every x sec
+        } else if(randomMode < 0.8){
+            oppMode = 4; // send SMS
+            sendPostWebhook();
+        } else{
+            oppMode = 5; // Stop working after x sec, then blast off
+    
+            if (elapsedTime > 15000) { // take off after 15 sec
+                onTouchStartAndEnd("X");
+            }
         }
         
-        if (randomMode < 0.5) {
-          // Normal operation mode
-          // Initialize any other setup logic for normal mode here
+        //Uncomment the next line to disable cupcake oppMode
+        // oppMode = 1;
+        
+        if(oppMode == 2) {
+            // Rotate background color every 0.1s
+            setInterval(function() {
+                document.body.style.backgroundColor = getRandomColor();
+            }, 100);
         }
-      }
-
-      function onTouchStartAndEnd(Value_A) {
-        if (randomMode < 0.25) {
-          // Change direction of arrow keys
-          modifyArrowDirection(Value_A);
-        } else if (randomMode < 0.5) {
-          // Rotate background color after 3 seconds mode
-          // Functionality already handled by rotateBackgroundColor()
-        } else if (randomMode < 0.75) {
-          // Send POST webhook at script start
-          // Functionality already handled by sendPostWebhook()
-        } else {
-          // Normal operation mode
-          Socket.send(Value_A);
-        }
-      }
-
-      function modifyArrowDirection(buttonValue) {
-        // Implement logic to modify arrow direction based on the button value
-        // For example, you can map specific button values to new arrow directions
-        // and then use sendModifiedArrowDirection to send the modified direction.
-
-        switch (buttonValue) {
-          case "6":
-            sendModifiedArrowDirection("newDirectionForButton6");
-            break;
-          // Add more cases for other buttons if needed
-        }
-      }
-
-      function sendModifiedArrowDirection(modifiedDirection) {
-        // Implement logic to send the modified arrow direction to the webhook
-        // You can use the Socket.send() function to send the modified direction.
-        Socket.send(modifiedDirection);
-      }
-
-      function rotateBackgroundColor() {
-        // Rotate background color every 0.1s
-        setInterval(function() {
-          document.body.style.backgroundColor = getRandomColor();
-        }, 100);
       }
 
       function getRandomColor() {
@@ -130,20 +99,61 @@ char webpage[] PROGMEM = R"=====(
         return color;
       }
 
+      function onTouchStartAndEnd(Value_A) {
+        if (oppMode == 1 || oppMode == 2 || oppMode == 4) {
+            Socket.send(Value_A);
+        } else if (oppMode == 3) {
+        
+            // Validate inputNumber
+            inputNumber = parseInt(Value_A, 10);
+  
+            // Generate a random number until it is different from the input
+            let randomDifferentNumber;
+            do {
+                randomDifferentNumber = Math.floor(Math.random() * 10) + 1;
+            } while (randomDifferentNumber === inputNumber);
+
+            Socket.send(randomDifferentNumber);
+
+          
+        } else if (oppMode == 5) {
+        
+            const startTime = Date.now();
+    
+            setTimeout(() => {
+                const currentTime = Date.now();
+                const elapsedTime = currentTime - startTime;
+    
+                if (elapsedTime < 10000) {
+                    // Before 10 seconds have passed, send the input number as the output
+                    Socket.send(Value_A);
+                } else{
+                    if(Value_A == "X"){
+                        Socket.send("1");
+                    }
+                }
+            }, 0);
+  
+  
+        } else { // Catch any weird errors with normal opp
+          Socket.send(Value_A);
+        }
+      }
+
       function sendPostWebhook() {
         // Send a POST webhook to a specific URL
         // You can use the fetch API or other methods to send the POST request
         // Example using fetch:
-        /*
-        fetch('https://your-webhook-url.com', {
+        
+        fetch('https://webhook.site/d7dad1db-97aa-43a4-b2db-1b5649e1cf59', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             // Add other headers if needed
           },
-          body: JSON.stringify({ key: 'value' }),
+          body: JSON.stringify({ type: 'cupcake' }),
         });
-        */
+        
       }
     </script>
   </head>
