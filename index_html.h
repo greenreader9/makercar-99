@@ -2,8 +2,53 @@ char webpage[] PROGMEM = R"=====(
 <!DOCTYPE HTML><html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=no">
-    <style>
-      // ... (unchanged styles)
+        <style>
+    .arrows {
+      margin : 0;
+      font-size:55px;
+      color:red;
+    }
+    .circularArrows {
+      font-size:60px;
+      color:darkblue;
+    }
+    h1 {
+      font-family: Georgia, serif;  
+      font-style: italic; 
+      font-weight: bold;
+      margin : 0;
+      padding-top:0;
+      color: black;
+      text-align:center;
+    }
+    h2 {
+      margin : 0; 
+      padding-top:0;
+      font-size:70px;
+      text-align:center;"
+    }
+    td {
+      background-color:black;
+      border-radius:25%;
+      box-shadow: 5px 5px #888888;
+      text-align: center; 
+      vertical-align: top;
+    }
+
+    td:active {
+      transform: translate(5px,5px);
+      box-shadow: none; 
+    }
+
+    .noselect {
+      -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+         -khtml-user-select: none; /* Konqueror HTML */
+           -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none; /* Non-prefixed version, currently
+                                      supported by Chrome and Opera */
+    }
     </style>
     <script>
       var Socket;
