@@ -4,6 +4,11 @@ char webpage[] PROGMEM = R"=====(
 <head>
   <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi">
   <style>
+    html {
+	    -webkit-text-size-adjust: none;
+	    touch-action: none;
+    }
+
     .arrows {
       margin : 0;
       font-size:55px;
@@ -57,6 +62,17 @@ char webpage[] PROGMEM = R"=====(
     var startTime;
     var oppMode;
     
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+      window.document.addEventListener('touchmove', e => {
+        if(e.scale !== 1) {
+          e.preventDefault();
+        }
+      }, {passive: false});
+    }
+
+    document.ondblclick = function(e) {
+      e.preventDefault();
+    }
 
     document.addEventListener('touchstart', function(event) {
       if (event.touches.length > 1) {
