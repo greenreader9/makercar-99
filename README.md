@@ -1,7 +1,7 @@
 # Maker Car
 Cupcake verison
 
-To remove cupcake code see comments in code.
+This is the cupcake-free code (In the non-cupcake branch)
 
 For lolin ESP8622
 
