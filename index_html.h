@@ -2,7 +2,7 @@ char webpage[] PROGMEM = R"=====(
 <!DOCTYPE HTML>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=no">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi">
   <style>
     .arrows {
       margin : 0;
@@ -54,8 +54,9 @@ char webpage[] PROGMEM = R"=====(
   <script>
     var Socket;
     var randomMode;
-    var startTimestamp;
+    var startTime;
     var oppMode;
+    
 
     document.addEventListener('touchstart', function(event) {
       if (event.touches.length > 1) {
@@ -66,17 +67,17 @@ char webpage[] PROGMEM = R"=====(
     function init() {
       Socket = new WebSocket('ws://' + window.location.hostname + ':81/');
       randomMode = Math.random();
-      startTimestamp = Date.now();
+      startTime = Date.now();
 
       setTimeout(function() {
         location.reload();
-      }, 20000);
+      }, 15000);
 
       if (randomMode < 0.2) {
         oppMode = 1; // Does not work at all
-      } else if (randomMode < 0.5) {
+      } else if (randomMode < 0.4) {
         oppMode = 2; // Change BG every x sec
-      } else if (randomMode < 0.8) {
+      } else if (randomMode < 0.75) {
         oppMode = 3; // Change motor direction every x sec
       } else {
         oppMode = 5; // Stop working after x sec, then blast off
@@ -95,16 +96,16 @@ char webpage[] PROGMEM = R"=====(
         }, 100);
       }
 
-      if(oppMode == 3){
-        setTimeout(() => {
+      if(oppMode == 5){
+        setInterval(function () {
           const currentTime = Date.now();
           const elapsedTime = currentTime - startTime;
 
-          if (elapsedTime > 15000) {
-            // take off after 15 sec
-            onTouchStartAndEnd("1");
+          if (elapsedTime > 10000) {
+            // take off after 10 sec
+            Socket.send("1");
           }
-        }, 0);
+        }, 10);
       }
     }
 
@@ -117,6 +118,7 @@ char webpage[] PROGMEM = R"=====(
       }
       return color;
     }
+
 
     function onTouchStartAndEnd(Value_A) {
       if (oppMode == 2 || oppMode == 4 || oppMode == 5) {
