@@ -17,7 +17,7 @@
 
 void processCarMovement(int Action)
 {
-  Serial.printf("Got value %d \n", Action);  
+  //Serial.printf("Got value %d \n", Action);  
   switch(Action)
   {
 
