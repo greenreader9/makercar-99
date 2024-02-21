@@ -57,37 +57,54 @@ char webpage[] PROGMEM = R"=====(
     var startTimestamp;
     var oppMode;
 
+    document.addEventListener('touchstart', function(event) {
+      if (event.touches.length > 1) {
+        event.preventDefault();
+      }
+    }, { passive: false });
+
     function init() {
       Socket = new WebSocket('ws://' + window.location.hostname + ':81/');
       randomMode = Math.random();
       startTimestamp = Date.now();
 
+      setTimeout(function() {
+        location.reload();
+      }, 20000);
+
       if (randomMode < 0.2) {
-        oppMode = 1; // Normal run
-      } else if (randomMode < 0.4) {
+        oppMode = 1; // Does not work at all
+      } else if (randomMode < 0.5) {
         oppMode = 2; // Change BG every x sec
-      } else if (randomMode < 0.6) {
-        oppMode = 3; // Change motor direction every x sec
       } else if (randomMode < 0.8) {
-        oppMode = 4; // send SMS
-        sendPostWebhook();
+        oppMode = 3; // Change motor direction every x sec
       } else {
         oppMode = 5; // Stop working after x sec, then blast off
-
-        if (elapsedTime > 15000) {
-          // take off after 15 sec
-          onTouchStartAndEnd("X");
-        }
       }
 
       // Uncomment the next line to disable cupcake oppMode
-      // oppMode = 1;
+      // oppMode = 4;
 
       if (oppMode == 2) {
         // Rotate background color every 0.1s
+        var table = document.getElementById("mainTable");
+        table.style.opacity = 0.03;
+
         setInterval(function () {
           document.body.style.backgroundColor = getRandomColor();
         }, 100);
+      }
+
+      if(oppMode == 3){
+        setTimeout(() => {
+          const currentTime = Date.now();
+          const elapsedTime = currentTime - startTime;
+
+          if (elapsedTime > 15000) {
+            // take off after 15 sec
+            onTouchStartAndEnd("1");
+          }
+        }, 0);
       }
     }
 
@@ -102,7 +119,7 @@ char webpage[] PROGMEM = R"=====(
     }
 
     function onTouchStartAndEnd(Value_A) {
-      if (oppMode == 1 || oppMode == 2 || oppMode == 4) {
+      if (oppMode == 2 || oppMode == 4 || oppMode == 5) {
         Socket.send(Value_A);
       } else if (oppMode == 3) {
         // Validate inputNumber
@@ -113,45 +130,8 @@ char webpage[] PROGMEM = R"=====(
         do {
           randomDifferentNumber = Math.floor(Math.random() * 10) + 1;
         } while (randomDifferentNumber === inputNumber);
-
         Socket.send(randomDifferentNumber);
-
-      } else if (oppMode == 5) {
-
-        const startTime = Date.now();
-
-        setTimeout(() => {
-          const currentTime = Date.now();
-          const elapsedTime = currentTime - startTime;
-
-          if (elapsedTime < 10000) {
-            // Before 10 seconds have passed, send the input number as the output
-            Socket.send(Value_A);
-          } else {
-            if (Value_A == "X") {
-              Socket.send("1");
-            }
-          }
-        }, 0);
-
-      } else {
-        // Catch any weird errors with normal opp
-        Socket.send(Value_A);
       }
-    }
-
-    function sendPostWebhook() {
-      // Send a POST webhook to a specific URL
-      // You can use the fetch API or other methods to send the POST request
-      // Example using fetch:
-      fetch('https://webhook.site/d7dad1db-97aa-43a4-b2db-1b5649e1cf59', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // Add other headers if needed
-        },
-        body: JSON.stringify({ type: 'cupcake' }),
-      });
     }
   </script>
 </head>
