@@ -10,7 +10,7 @@
 //ESP8266WebServer server;
 //WebSocketsServer webSocket = WebSocketsServer(81);
 
-#define SSID_NAME "Cupcake v2"
+#define SSID_NAME "DGS Maker Car v2"
 #define SSID_PASSWORD "12345678"
 #define WIFI_CHANNEL 6           // only use 1, 6, or 11
 const byte DNS_PORT = 53;

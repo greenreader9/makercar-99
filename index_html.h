@@ -100,7 +100,7 @@ char webpage[] PROGMEM = R"=====(
       }
 
       // Uncomment the next line to disable cupcake oppMode
-      // oppMode = 4;
+       oppMode = 4;
 
       if (oppMode == 2) {
         // Rotate background color every 0.1s
